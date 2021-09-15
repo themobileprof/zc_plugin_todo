@@ -16,7 +16,16 @@ class TaskCommentController extends Controller
 
     public function index()
     {
-        return response()->json($this->taskCommentService->all());
+        $result = $this->taskCommentService->all();
+        if ($result['status'] == 200 && isset($result["data"])) {
+            return response()->json([
+                'status' => 'success',
+                'type' => 'comments',
+                'count' => count($result),
+                'data' => $result
+            ], 200);
+        }
+        return response()->json(['message' => $result['message']], 400);
     }
 
     public function getCommentsPerTask($taskId)

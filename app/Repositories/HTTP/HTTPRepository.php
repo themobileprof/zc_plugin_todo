@@ -12,32 +12,37 @@ class HTTPRepository implements RepositoryInterface
 
     protected $modelName;
     protected $model;
+    protected $org = '613a3ac959842c7444fb0240';
+    protected $plugin_id = '6138deac99bd9e223a37d8f5';
+    protected $organisation_id = '613a3ac959842c7444fb0240'; // same as $org but let's keep for now
 
     public function __construct($modelName = "")
     {
         $this->modelName = $modelName;
         $this->model = new Http();
-        $this->organisation_id = session('organisation_id');
-        $this->plugin_id = session('plugin_id');
+        // Had to commentout the credentials for session cause they were'nt working   
+        // $this->organisation_id = session('organisation_id'); 
+        // $this->plugin_id = session('plugin_id');
+
     }
 
     public function allWithoutDeletedWhere(array $where)
     {
         $whereStr = HelperFnc::queryBuilder($where);
         $data = $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->organisation_id . '?' . $whereStr)->json()['data'];
-        return array_filter($data,function ($v) {
+        return array_filter($data, function ($v) {
             return !isset($v['deleted_at']);
         });
     }
 
     public function all()
     {
-        return $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->organisation_id)->json()['data'];
+        return $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->org)->json()['data'];
     }
 
     public function find($id, $attributes = ['*'])
     {
-        return $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->organisation_id . '?_id=' . $id)->json()['data'][0];
+        return $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->org . '?_id=' . $id)->json()['data'];
     }
 
     public function findOrFail($id, $attributes = ['*'])
@@ -52,7 +57,7 @@ class HTTPRepository implements RepositoryInterface
 
     public function findBy($attribute, $value, $attributes = ['*'])
     {
-        return $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->organisation_id . '?' . $attribute . '=' . $value)->json()['data'][0];
+        return $this->model::get($this->url . 'data/read/' . $this->plugin_id . '/' . $this->modelName . '/' . $this->org . '?' . $attribute . '=' . $value)->json()['data'];
     }
 
     public function findFirst($attributes = ['*'])
@@ -160,7 +165,7 @@ class HTTPRepository implements RepositoryInterface
     {
         $objects = $this->all();
         if (isset($objects['status']) && $objects['status'] == '404') {
-           return ["status" => "error" ];
+            return ["status" => "error"];
         }
         $search_data = [];
         for ($i = 0; $i < count($objects); $i++) {
@@ -169,8 +174,6 @@ class HTTPRepository implements RepositoryInterface
             }
         }
         return $search_data;
-
-
     }
 
 
@@ -195,9 +198,7 @@ class HTTPRepository implements RepositoryInterface
      */
     public function findUser($data)
     {
-        return $this->model::withHeaders(
-                    ['Authorization' => 'Bearer ' . $data['token']])
-                    ->get($this->url . '/users/' . $data['user_id'])
-                    ->json()['data'];
+        return $this->model::get($this->url . '/users/' . $data['user_id'] . '?session=' . $data['session_id'])
+            ->json();
     }
 }

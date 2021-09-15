@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskRequest extends FormRequest
+class TodoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,6 +13,7 @@ class TaskRequest extends FormRequest
      */
     public function authorize()
     {
+        // return false;
         return true;
     }
 
@@ -25,13 +26,9 @@ class TaskRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'description' => 'required|max:255',
-            'end_date' => 'required|max:255',
-            'labels' => 'required|max:255',
-            'tasks' => 'required|array|min:1',
-            'owner' => 'required|max:255',
             'status' => 'required',
-            'user' => 'required',
+            'user_id' => 'required',
+            'type' => 'required',
         ];
     }
 }
