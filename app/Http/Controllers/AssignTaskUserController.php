@@ -34,4 +34,17 @@ class AssignTaskUserController extends Controller
 
         return response()->json($response);
     }
+
+    public function remove(Request $request)
+    {
+        $task = $this->taskService->find($request->task_id);
+
+        $data = array();
+
+        $data['assigned_users'] = unset($data['assigned_users'], $request->user_id);
+
+        $response = $this->taskService->update($data, $request->task_id);
+
+        return response()->json($response); 
+    }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\TaskCommentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class TaskCommentController extends Controller
 {
@@ -16,7 +18,9 @@ class TaskCommentController extends Controller
 
     public function index()
     {
+
         $result = $this->taskCommentService->all();
+        return $result;
         if ($result['status'] == 200 && isset($result["data"])) {
             return response()->json([
                 'status' => 'success',
@@ -84,4 +88,5 @@ class TaskCommentController extends Controller
     {
         return response()->json($this->taskCommentService->delete($id));
     }
+
 }
