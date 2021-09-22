@@ -1,24 +1,24 @@
 # sing-vue
 
-## Project setup
+## 1. Project setup
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+yarn install
 ```
 
-### Compiles and minifies for production
+## 2. Compiles and minifies for production
 ```
-npm run build
+yarn run build
+```
+
+## 3. Compiles and hot-reloads for development
+```
+yarn run serve:standalone
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn run lint
 ```
 
-### Customize configuration
+#### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
